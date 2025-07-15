@@ -24,7 +24,7 @@ sed -i 's/luci-theme-bootstrap/luci-theme-argon/g' feeds/luci/collections/luci/M
 echo "✅ 开始执行 diy-part2.sh：修改 dts 和镜像限制..."
 
 MTK_MK="target/linux/mediatek/image/mt7981.mk"
-DTS_FILE="target/linux/mediatek/files-6.6/arch/arm64/boot/dts/mediatek/mt7981b-cudy-tr3000-v1.dts"
+DTS_FILE="target/linux/mediatek/files-5.4/arch/arm64/boot/dts/mediatek/mt7981-cudy-tr3000-v1.dts"
 
 echo "📄 处理 DTS 文件：$DTS_FILE"
 if [ -f "$DTS_FILE" ]; then
