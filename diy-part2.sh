@@ -30,12 +30,8 @@ echo "📂 当前目录结构：target/linux/mediatek/dts/"
 ls -lh target/linux/mediatek/dts/
 
 # 1️⃣ 修改 DTS 分区大小为适配 512MB NAND（起始 0x5C0000，长度 0x1EA00000 ≈ 506MB）
-if grep -q '&ubi' "$DTS_FILE"; then
-    echo "🛠 修改 &ubi 节点 reg 为 0x5C0000 ~ 0x1EA00000..."
-    sed -i '/&ubi {/,/};/s/reg = <[^>]*>/reg = <0x5C0000 0x1EA00000>/' "$DTS_FILE"
-else
-    echo "⚠️ 未找到 &ubi 节点，请手动检查 $DTS_FILE"
-fi
+sed -i -E '/&ubi {/,/};/s/reg = <[^>]+>/reg = <0x5C0000 0x1EA00000>/' "$DTS_FILE"
+grep -A3 '&ubi' "$DTS_FILE"
 
 # 2️⃣ 修改 IMAGE_SIZE（推荐方式）
 if grep -q 'cudy_tr3000-v1' "$MTK_MK"; then
