@@ -26,8 +26,7 @@ echo "✅ 开始执行 diy-part2.sh：修改 dts 和镜像限制..."
 DTS_FILE="target/linux/mediatek/dts/mt7981b-cudy-tr3000-v1.dts"
 MTK_MK="target/linux/mediatek/image/mt7981.mk"
 
-echo "📂 当前目录结构：target/linux/mediatek/dts/"
-ls -lh target/linux/mediatek/dts/
+cd openwrt/bin/
 
 # 1️⃣ 修改 DTS 分区大小为适配 512MB NAND（起始 0x5C0000，长度 0x1EA00000 ≈ 506MB）
 sed -i -E '/&ubi {/,/};/s/reg = <[^>]+>/reg = <0x5C0000 0x1EA00000>/' "$DTS_FILE"
