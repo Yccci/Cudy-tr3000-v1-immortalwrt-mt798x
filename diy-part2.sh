@@ -24,19 +24,18 @@ sed -i 's/luci-theme-bootstrap/luci-theme-argon/g' feeds/luci/collections/luci/M
 echo "✅ 开始执行 diy-part2.sh：修改 dts 和镜像限制..."
 
 MTK_MK="target/linux/mediatek/image/mt7981.mk"
-DTS_FILE="target/linux/mediatek/dts/mt7981b-cudy-tr3000-v1.dts"
+DTS_FILE="target/linux/mediatek/files-6.6/arch/arm64/boot/dts/mediatek/mt7981b-cudy-tr3000-v1.dts"
 
+echo "📄 处理 DTS 文件：$DTS_FILE"
 if [ -f "$DTS_FILE" ]; then
-    echo "🛠 正在修改 $DTS_FILE 中 &ubi 的 reg ..."
-    if grep -q '&ubi' "$DTS_FILE"; then
-        sed -i -E '/&ubi {/,/};/s/reg = <[^>]+>/reg = <0x5C0000 0x1EA00000>/' "$DTS_FILE"
-        if grep -q 'reg = <0x5C0000 0x1EA00000>' "$DTS_FILE"; then
-            echo "✅ 修改成功: reg = <0x5C0000 0x1EA00000>"
-        else
-            echo "⚠️ 修改执行了但未生效，请检查格式"
-        fi
+    echo "🔧 处理 $DTS_FILE"
+
+    # 修改 nmbm ubi 分区大小
+    if grep -q 'partition@580000' "$DTS_FILE"; then
+        sed -i -E '/partition@580000 {/,/};/s/reg = <[^>]+>/reg = <0x5C0000 0x1EA00000>/' "$DTS_FILE"
+        echo "✅ 已修改 ubi 分区 reg = <0x5C0000 0x1EA00000>"
     else
-        echo "❌ 未找到 &ubi 节点，手动检查文件内容"
+        echo "⚠️ 未找到 ubi 分区定义"
     fi
 else
     echo "❌ DTS 文件不存在：$DTS_FILE"
