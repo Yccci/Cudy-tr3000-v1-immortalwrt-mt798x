@@ -23,7 +23,7 @@ sed -i 's/luci-theme-bootstrap/luci-theme-argon/g' feeds/luci/collections/luci/M
 # 功能：修改 Cudy TR3000 的 NAND 分区以支持 512MB，并提升 UBI 镜像最大大小限制
 echo "✅ 开始执行 diy-part2.sh：修改 dts 和镜像限制..."
 
-DTS_FILE="target/linux/mediatek/dts/mt7981b-cudy-tr3000.dts"
+DTS_FILE="target/linux/mediatek/dts/mt7981b-cudy-tr3000-v1.dts"
 MTK_MK="target/linux/mediatek/image/mt7981.mk"
 
 # 1️⃣ 修改 DTS 分区大小为适配 512MB NAND（起始 0x5C0000，长度 0x1EA00000 ≈ 506MB）
@@ -34,12 +34,12 @@ else
     echo "⚠️ 未找到 partition@5c0000，请手动检查 $DTS_FILE"
 fi
 
-# 2️⃣ 修改 UBI_MAX_SIZE 为 506MiB（默认是 122MiB）
-if grep -q 'UBI_MAX_SIZE' "$MTK_MK"; then
-    echo "🛠 修改 UBI_MAX_SIZE 为 506MiB..."
-    sed -i 's/UBI_MAX_SIZE := .*MiB/UBI_MAX_SIZE := 506MiB/' "$MTK_MK"
+# 2️⃣ 修改 IMAGE_SIZE（推荐方式）
+if grep -q 'cudy_tr3000-v1' "$MTK_MK"; then
+    echo "🛠 设置 IMAGE_SIZE 为 512MB..."
+    sed -i '/Device\/cudy_tr3000-v1/,/endef/ s/IMAGE_SIZE := .*/IMAGE_SIZE := 522240k/' "$MTK_MK"
 else
-    echo "⚠️ 未找到 UBI_MAX_SIZE，请手动检查 $MTK_MK"
+    echo "⚠️ 未找到 cudy_tr3000-v1 设备定义，请手动检查 $MTK_MK"
 fi
 
 echo "🎉 diy-part2.sh 修改完成！"
