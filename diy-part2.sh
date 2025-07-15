@@ -26,17 +26,12 @@ echo "✅ 开始执行 diy-part2.sh：修改 dts 和镜像限制..."
 MTK_MK="target/linux/mediatek/image/mt7981.mk"
 DTS_FILE="target/linux/mediatek/files-5.4/arch/arm64/boot/dts/mediatek/mt7981-cudy-tr3000-v1.dts"
 
-echo "📄 处理 DTS 文件：$DTS_FILE"
 if [ -f "$DTS_FILE" ]; then
     echo "🔧 处理 $DTS_FILE"
 
-    # 修改 nmbm ubi 分区大小
-    if grep -q 'partition@580000' "$DTS_FILE"; then
-        sed -i -E '/partition@580000 {/,/};/s/reg = <[^>]+>/reg = <0x5C0000 0x1EA00000>/' "$DTS_FILE"
-        echo "✅ 已修改 ubi 分区 reg = <0x5C0000 0x1EA00000>"
-    else
-        echo "⚠️ 未找到 ubi 分区定义"
-    fi
+    # 替换 ubi 分区大小
+    sed -i '/partition@580000 {/,/};/s/reg = <[^>]*>/reg = <0x5C0000 0x1EA00000>/' "$DTS_FILE" \
+        && echo "✅ 已修改 ubi 分区 reg = <0x5C0000 0x1EA00000>"
 else
     echo "❌ DTS 文件不存在：$DTS_FILE"
 fi
