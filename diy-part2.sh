@@ -32,6 +32,8 @@ if [ -f "$DTS_FILE" ]; then
     # 替换 ubi 分区大小
     sed -i '/partition@580000 {/,/};/s/reg = <[^>]*>/reg = <0x5C0000 0x1EA00000>/' "$DTS_FILE" \
         && echo "✅ 已修改 ubi 分区 reg = <0x5C0000 0x1EA00000>"
+
+    cat target/linux/mediatek/files-5.4/arch/arm64/boot/dts/mediatek/mt7981-cudy-tr3000-v1.dts
 else
     echo "❌ DTS 文件不存在：$DTS_FILE"
 fi
